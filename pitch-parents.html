@@ -456,11 +456,40 @@
   }
 
   @media (max-width: 900px) {
-    .slide { padding: 6vh 6vw; }
-    .grid-2, .grid-3, .roles, .rule-tiles, .roadmap { grid-template-columns: 1fr; }
+    .slide {
+      padding: 7vh 5vw 10vh;
+      justify-content: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    h1 { font-size: clamp(26px, 7.5vw, 44px); line-height: 1.15; max-width: 100%; }
+    h2 { font-size: clamp(22px, 6vw, 34px); line-height: 1.2; max-width: 100%; }
+    h3 { font-size: 18px; }
+    .eyebrow { font-size: 11px; margin-bottom: 12px; }
+    .lede { font-size: 15px; line-height: 1.5; margin-bottom: 18px; }
+    .sub { font-size: 14px; }
+    .bullets { gap: 10px; }
+    .bullets li { font-size: 15px; padding-left: 22px; line-height: 1.4; }
+    .motto { font-size: 18px; display: flex; flex-wrap: wrap; gap: 2px; align-items: center; margin: 12px 0 18px; }
+    .motto .seg { padding: 0 4px; }
+    .motto .arrow { margin: 0 2px; }
+    .grid-2, .grid-3, .roles, .rule-tiles { grid-template-columns: 1fr; gap: 12px; }
+    .roadmap { grid-template-columns: 1fr; gap: 18px; margin-top: 18px; }
     .roadmap::before { display: none; }
     .finance-row { flex-direction: column; align-items: flex-start; gap: 8px; }
     .finance-row .value { text-align: left; }
+    .placeholder { display: inline-block; }
+    .card { padding: 16px 18px; }
+    .card h4 { font-size: 15px; }
+    .card p { font-size: 14px; }
+    .roles .role { padding: 14px 16px; }
+    .rule-tile { padding: 16px 18px; }
+    .rule-tile h4 { font-size: 15px; }
+    .rule-tile p { font-size: 13px; }
+    .counter { bottom: 14px; right: 14px; font-size: 11px; }
+    .nav-hint { bottom: 14px; left: 14px; font-size: 10px; }
+    .progress { height: 2px; }
+    .aside { font-size: 13px; }
   }
 </style>
 </head>
@@ -698,15 +727,21 @@
     else if (e.key === 'End') show(slides.length - 1);
   });
 
-  let touchStartX = 0;
-  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
   document.addEventListener('touchend', (e) => {
     const dx = e.changedTouches[0].screenX - touchStartX;
-    if (dx < -50) next();
-    if (dx > 50) prev();
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < -60) next();
+    if (dx > 60) prev();
   });
 
   document.addEventListener('click', (e) => {
+    if (window.innerWidth < 900) return;
     const w = window.innerWidth;
     if (e.clientX > w * 0.7) next();
     else if (e.clientX < w * 0.3) prev();
