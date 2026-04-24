@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesh-Tracker — презентации проекта</title>
+<meta property="og:title" content="Mesh-Tracker — проект для старшей группы кружка">
+<meta property="og:description" content="GPS-ошейник для собак без сотовой связи. Командная разработка, 6 месяцев, реальный продукт. Презентации для руководителя и родителей.">
+<meta property="og:type" content="website">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b1220;
+    --panel: #17223b;
+    --ink: #e8edf5;
+    --ink-dim: #8c99b3;
+    --ink-muted: #5d6a86;
+    --accent: #ff9248;
+    --accent-2: #2dd4bf;
+    --line: rgba(255, 255, 255, 0.08);
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', 'Inter', 'Helvetica Neue', -apple-system, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    background:
+      radial-gradient(ellipse at top left, rgba(45, 212, 191, 0.07), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(255, 146, 72, 0.06), transparent 50%),
+      var(--bg);
+  }
+  .wrap { max-width: 720px; width: 100%; }
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  h1 .accent { color: var(--accent); }
+  .lede {
+    font-size: clamp(17px, 1.5vw, 20px);
+    color: var(--ink-dim);
+    line-height: 1.5;
+    margin-bottom: 48px;
+    max-width: 55ch;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .deck-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 26px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .deck-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent-2);
+  }
+  .deck-card.boss::before { background: var(--accent); }
+  .deck-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 146, 72, 0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+  .deck-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .deck-card p {
+    font-size: 14px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+  .deck-card .go {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .deck-card.soon {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .deck-card.soon:hover {
+    transform: none;
+    border-color: var(--line);
+    box-shadow: none;
+  }
+  .deck-card.soon .go { color: var(--ink-muted); }
+  footer {
+    margin-top: 48px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    letter-spacing: 0.5px;
+  }
+  @media (max-width: 640px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Mesh-Tracker</div>
+  <h1>GPS-ошейник для&nbsp;собак<br>без <span class="accent">сотовой связи</span></h1>
+  <p class="lede">Проект для старшей группы кружка робототехники. Командная разработка продукта российского производства, шестимесячный цикл, реальные пользователи. Ниже — презентации проекта для руководителя учреждения и родителей участников.</p>
+
+  <div class="card-grid">
+    <a class="deck-card boss" href="pitch-boss.html">
+      <h2>Для руководителя</h2>
+      <p>Запуск проекта в старшей группе: команда по отбору, дисциплина, экономика проекта, путь к первым продажам и гранту.</p>
+      <span class="go">Открыть →</span>
+    </a>
+    <a class="deck-card" href="pitch-parents.html">
+      <h2>Для родителей</h2>
+      <p>Приглашение на долгосрочный проект: что получит ребёнок, правила участия, условия оплаты, отбор.</p>
+      <span class="go">Открыть →</span>
+    </a>
+  </div>
+
+  <footer>Навигация внутри презентаций — стрелки ← →, пробел или свайп</footer>
+</div>
+</body>
+</html>

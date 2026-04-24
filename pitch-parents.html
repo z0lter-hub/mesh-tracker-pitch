@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приглашение для родителей на долгосрочный проект</title>
+<meta property="og:title" content="Приглашение для родителей на долгосрочный проект">
+<meta property="og:description" content="GPS-ошейник для собак, 6 месяцев разработки, команда и обязательство. Условия участия.">
+<meta property="og:type" content="website">
+<meta name="description" content="GPS-ошейник для собак, 6 месяцев разработки, команда и обязательство. Условия участия.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b1220;
+    --bg-2: #111a2e;
+    --panel: #17223b;
+    --ink: #e8edf5;
+    --ink-dim: #8c99b3;
+    --ink-muted: #5d6a86;
+    --accent: #ff9248;
+    --accent-2: #2dd4bf;
+    --alert: #ff6b6b;
+    --line: rgba(255, 255, 255, 0.08);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', 'Inter', 'Helvetica Neue', -apple-system, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6vh 10vw;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at top left, rgba(45, 212, 191, 0.06), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(255, 146, 72, 0.05), transparent 50%),
+      var(--bg);
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .slide.prev {
+    transform: translateX(-40px);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5.2vw, 72px);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 17ch;
+    margin-bottom: 24px;
+  }
+
+  h1 .accent {
+    color: var(--accent);
+  }
+
+  h2 {
+    font-size: clamp(28px, 3.6vw, 52px);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    max-width: 20ch;
+    margin-bottom: 28px;
+  }
+
+  h3 {
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.5;
+    color: var(--ink-dim);
+    max-width: 60ch;
+    margin-bottom: 24px;
+  }
+
+  .sub {
+    font-size: clamp(16px, 1.35vw, 20px);
+    color: var(--ink-dim);
+    margin-top: 16px;
+    max-width: 55ch;
+  }
+
+  .counter {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    letter-spacing: 1.5px;
+    z-index: 10;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--accent-2), var(--accent));
+    transition: width 0.4s ease;
+    z-index: 10;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 28px;
+    left: 36px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 1px;
+    z-index: 10;
+  }
+
+  .grid {
+    display: grid;
+    gap: 22px;
+    margin-top: 14px;
+  }
+
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+
+  .card.teal::before { background: var(--accent-2); }
+
+  .card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .card p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+  }
+
+  .bullets {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    margin-top: 10px;
+    max-width: 65ch;
+  }
+
+  .bullets li {
+    position: relative;
+    padding-left: 26px;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .bullets.teal li::before { background: var(--accent-2); }
+  .bullets.alert li::before { background: var(--alert); }
+
+  .aside {
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-top: 20px;
+    max-width: 55ch;
+    font-style: italic;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 8px 0;
+  }
+
+  .stat-big {
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-lbl {
+    font-size: 16px;
+    color: var(--ink-dim);
+  }
+
+  .kicker {
+    font-size: clamp(14px, 1vw, 16px);
+    color: var(--ink-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 26px;
+  }
+
+  .roles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .role {
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .role h5 {
+    font-size: 15px;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .role p {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+
+  .motto {
+    font-size: clamp(22px, 2.6vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 14px 0 24px;
+  }
+
+  .motto .seg {
+    display: inline-block;
+    padding: 0 10px;
+    color: var(--ink-muted);
+  }
+  .motto .seg.active {
+    color: var(--accent);
+  }
+  .motto .arrow {
+    color: var(--ink-muted);
+    margin: 0 4px;
+  }
+
+  .rule-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .rule-tile {
+    padding: 20px 22px;
+    background: var(--panel);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .rule-tile.alert { border-left-color: var(--alert); }
+  .rule-tile.teal { border-left-color: var(--accent-2); }
+
+  .rule-tile h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .rule-tile p {
+    font-size: 14px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+
+  .grants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+    max-width: 70ch;
+  }
+
+  .grant-pill {
+    padding: 8px 14px;
+    background: rgba(45, 212, 191, 0.12);
+    color: var(--accent-2);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(45, 212, 191, 0.25);
+  }
+
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 32px;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 14px;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent-2), var(--accent));
+    z-index: 0;
+  }
+
+  .rm-step {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 10px;
+  }
+
+  .rm-dot {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 14px;
+    background: var(--bg);
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+  }
+
+  .rm-step:first-child .rm-dot { border-color: var(--accent-2); }
+  .rm-step:last-child .rm-dot { border-color: var(--accent); background: var(--accent); }
+
+  .rm-time {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .rm-title {
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .rm-desc {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+
+  .placeholder {
+    background: rgba(255, 214, 0, 0.18);
+    padding: 2px 10px;
+    border-radius: 4px;
+    color: #ffe066;
+    font-weight: 600;
+  }
+
+  .finance-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    max-width: 70ch;
+  }
+
+  .finance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    gap: 24px;
+  }
+
+  .finance-row .label {
+    font-size: clamp(15px, 1.3vw, 18px);
+    color: var(--ink-dim);
+  }
+
+  .finance-row .value {
+    font-size: clamp(16px, 1.4vw, 20px);
+    color: var(--ink);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 6vh 6vw; }
+    .grid-2, .grid-3, .roles, .rule-tiles, .roadmap { grid-template-columns: 1fr; }
+    .roadmap::before { display: none; }
+    .finance-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .finance-row .value { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter">01 / 12</div>
+<div class="nav-hint">← → или пробел</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 — Title -->
+  <section class="slide active">
+    <div class="eyebrow">Для родителей</div>
+    <h1>Приглашение на <span class="accent">долгосрочный проект</span></h1>
+    <p class="lede">Это не кружок. Это обязательство. Читайте внимательно — решение принимать вместе с ребёнком.</p>
+    <p class="sub" style="margin-top: 32px; opacity: 0.7">Шесть месяцев разработки реального продукта в команде. Условия жёсткие и неизменные.</p>
+  </section>
+
+  <!-- 2 — Проблема -->
+  <section class="slide">
+    <div class="eyebrow">С чего начинается разговор</div>
+    <h2>Ваш ребёнок, возможно, <span style="color:var(--accent)">перерос</span> обычные занятия</h2>
+    <p class="lede">Он умеет паять, писать код, собирать схемы. Ему скучно на учебных роботах, и всё чаще он уходит в телефон. Это не лень — это сигнал, что учебного формата уже недостаточно.</p>
+    <p class="sub">Следующий шаг — это не ещё один кружок и не олимпиада. Это вызов уровня взрослого мира: ответственность, сроки, команда, результат, который видят посторонние люди.</p>
+  </section>
+
+  <!-- 3 — Что предлагаем -->
+  <section class="slide">
+    <div class="eyebrow">Что именно мы предлагаем</div>
+    <h2>Шесть месяцев разработки <span style="color:var(--accent)">настоящего продукта</span></h2>
+    <p class="lede">Командный R&amp;D-проект по созданию GPS-ошейника для собак, который работает без сотовой связи. Российская разработка под российский рынок. Цель — довести продукт до продаж.</p>
+    <ul class="bullets teal">
+      <li>Команда из отобранных учеников, распределённые роли</li>
+      <li>2-3 обязательных занятия в неделю в течение 6 месяцев</li>
+      <li>Спринты, публичные защиты, полевые испытания</li>
+      <li>Финал: готовое устройство, грантовая заявка, первые клиенты</li>
+    </ul>
+  </section>
+
+  <!-- 4 — Что ребёнок получит -->
+  <section class="slide">
+    <div class="eyebrow">Результат для ребёнка</div>
+    <h2>Что получит ваш ребёнок</h2>
+    <div class="grid grid-2" style="margin-top: 20px">
+      <div class="card teal">
+        <h4>Навыки уровня младшего инженера</h4>
+        <p>Не учебные, а реальные: схемотехника, прошивка, приложение, корпус. За полгода — больше практики, чем за два года стандартных занятий.</p>
+      </div>
+      <div class="card teal">
+        <h4>Кейс в портфолио при поступлении в вуз</h4>
+        <p>Участие в разработке реального продукта — весомое индивидуальное достижение. Сильнее среднего олимпиадного результата.</p>
+      </div>
+      <div class="card">
+        <h4>Опыт команды в жёстком режиме</h4>
+        <p>Сроки, ответственность за свой участок, зависимость от других. То, что в школе не дают.</p>
+      </div>
+      <div class="card">
+        <h4>Участие в грантовой заявке</h4>
+        <p>Командная подготовка документов на грант. Редкий опыт для школьника и отдельная строка в резюме.</p>
+      </div>
+    </div>
+    <p class="aside">Если проект доходит до продаж — каждый участник получает долю в продукте. Без гарантий, но честно.</p>
+  </section>
+
+  <!-- 5 — Принцип: не "хочу/не хочу" -->
+  <section class="slide">
+    <div class="eyebrow">Принцип участия</div>
+    <h2>Это не секция <span style="color:var(--accent)">«попробовать и бросить»</span></h2>
+    <div class="motto">
+      <span class="seg active">Хочу</span><span class="arrow">→</span><span class="seg active">научусь</span><span class="arrow">→</span><span class="seg active">сделаю</span><span class="arrow">→</span><span class="seg active">добьюсь</span>
+    </div>
+    <p class="lede">Записаться на проект — это взять обязательство на шесть месяцев. Не «ходить, пока интересно». Не «посмотрим, как пойдёт». Команда держится каждым её участником; если один выпадает — спринт срывается у четверых остальных.</p>
+    <p class="sub">Поэтому правила ниже обсуждению не подлежат. Они озвучены до зачисления, чтобы решение принималось осознанно.</p>
+  </section>
+
+  <!-- 6 — Правила (4 плитки, жёстко) -->
+  <section class="slide">
+    <div class="eyebrow">Правила — без исключений</div>
+    <h2>Условия, которые нужно <span style="color:var(--accent)">принять до старта</span></h2>
+    <div class="rule-tiles">
+      <div class="rule-tile teal">
+        <h4>2-3 занятия в неделю — обязательная явка</h4>
+        <p>Стабильный темп, синхронный прогресс команды. Без исключений под «устал», «завал в школе», «уехали на дачу».</p>
+      </div>
+      <div class="rule-tile">
+        <h4>Пропуски — только по болезни с подтверждением</h4>
+        <p>Справка или официальный документ. Остальные причины уважительными не считаются.</p>
+      </div>
+      <div class="rule-tile alert">
+        <h4>Любой другой пропуск — без возврата оплаты</h4>
+        <p>Деньги за пропущенное занятие не возвращаются и на другие занятия не переносятся.</p>
+      </div>
+      <div class="rule-tile alert">
+        <h4>Выход посреди проекта — без возврата оплаты</h4>
+        <p>Если ребёнок бросает проект в середине, внесённые средства не возвращаются. Это часть обязательства.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — Что требуется от родителей -->
+  <section class="slide">
+    <div class="eyebrow">Ваша роль</div>
+    <h2>Что требуется от вас</h2>
+    <ul class="bullets">
+      <li>Своевременная оплата — по согласованному графику, без задержек</li>
+      <li>Контроль посещения — убедиться, что ребёнок пришёл на занятие и был до конца</li>
+      <li>Не придумывать «уважительные причины»: свадьба родственника, поездка, семейный ужин — это не повод пропустить</li>
+      <li>Поддержка дома: тихое место для работы, доступ к интернету, не отрывать ребёнка от команды в рабочее время</li>
+      <li>Участие в собеседовании перед зачислением — знакомство, ответы на вопросы, подпись условий</li>
+    </ul>
+    <p class="aside">Если эти требования кажутся чрезмерными — проект не подходит вашей семье, и это нормально.</p>
+  </section>
+
+  <!-- 8 — Расписание -->
+  <section class="slide">
+    <div class="eyebrow">Расписание</div>
+    <h2>Ритм работы</h2>
+    <p class="lede">2-3 занятия в неделю × 6 месяцев. Конкретные дни и время согласуются после набора команды — исходя из расписания учреждения и возможностей участников.</p>
+    <div class="grid grid-2" style="margin-top: 20px">
+      <div class="card teal">
+        <h4>Начало работы</h4>
+        <p>Через <span class="placeholder">___</span> недель после зачисления и заключения договора. За это время закупается стартовый комплект комплектующих.</p>
+      </div>
+      <div class="card teal">
+        <h4>Продолжительность занятия</h4>
+        <p>Полноценная рабочая сессия — не 45 минут школьного урока. Ребёнок возвращается домой уставшим, это ожидаемо.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — Финансы (плейсхолдеры) -->
+  <section class="slide">
+    <div class="eyebrow">Финансовые условия</div>
+    <h2>Стоимость и порядок оплаты</h2>
+    <div class="finance-grid">
+      <div class="finance-row">
+        <span class="label">Стоимость участия в месяц</span>
+        <span class="value"><span class="placeholder">___ ₽</span></span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Стартовый взнос на материалы и комплектующие</span>
+        <span class="value"><span class="placeholder">___ ₽</span></span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Возврат при пропуске занятия</span>
+        <span class="value">Не предусмотрен</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Возврат при досрочном выходе</span>
+        <span class="value">Не предусмотрен</span>
+      </div>
+      <div class="finance-row">
+        <span class="label">Способ оплаты</span>
+        <span class="value">Через учреждение, по договору</span>
+      </div>
+    </div>
+    <p class="aside">Оплата проводится официально, с подтверждающими документами. Никаких наличных «мимо кассы».</p>
+  </section>
+
+  <!-- 10 — Отбор -->
+  <section class="slide">
+    <div class="eyebrow">Отбор в команду</div>
+    <h2>Берём не всех — и это <span style="color:var(--accent)">принципиально</span></h2>
+    <div class="grid grid-2" style="margin-top: 18px">
+      <div class="card teal">
+        <h4>Критерии отбора</h4>
+        <p>Ответственность и привычка доводить дело до конца. Дисциплина в текущих занятиях. Готовность работать в заданном формате. Не уровень знаний — его мы добираем внутри проекта.</p>
+      </div>
+      <div class="card">
+        <h4>Этапы отбора</h4>
+        <p>Собеседование с ребёнком. Отдельное собеседование с родителями. Пробный спринт длительностью две недели — и только после него окончательное зачисление.</p>
+      </div>
+    </div>
+    <p class="sub" style="margin-top: 22px">Пробный спринт — защита обеих сторон. Ребёнок понимает темп; мы видим, как он работает под нагрузкой.</p>
+  </section>
+
+  <!-- 11 — Что если не получится -->
+  <section class="slide">
+    <div class="eyebrow">Честно про риски</div>
+    <h2>Что если проект <span style="color:var(--accent)">не дотянет</span> до продаж</h2>
+    <p class="lede">Не каждая команда выходит на рынок. Часть проектов останавливается на стадии рабочего прототипа, часть — на стадии гранта. Мы этого не скрываем и не обещаем гарантированных продаж.</p>
+    <div class="grid grid-2" style="margin-top: 20px">
+      <div class="card teal">
+        <h4>Что остаётся в любом случае</h4>
+        <p>Навыки, портфолио, кейс в резюме, опыт командной работы, опыт участия в подготовке грантовой заявки. Это ребёнок получает независимо от исхода.</p>
+      </div>
+      <div class="card">
+        <h4>Риски, которые мы закладываем</h4>
+        <p>Выпадение участников по семейным обстоятельствам. Технические препятствия. Задержки с комплектующими. Под каждый риск — страховочный сценарий в плане проекта.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — Следующий шаг -->
+  <section class="slide">
+    <div class="eyebrow">Следующий шаг</div>
+    <h2>Запись на <span class="accent">собеседование</span></h2>
+    <p class="lede" style="margin-top: 14px">Если вы дочитали до этого места и условия вам понятны — запишитесь на собеседование. На нём мы ответим на вопросы, познакомимся с ребёнком и вами, и обе стороны примут решение.</p>
+    <p class="lede">Если остались сомнения — лучше сказать об этом сейчас, до подписания. Отказ на этапе знакомства — это нормально. Срыв посреди проекта — нет.</p>
+    <p class="kicker">Если вы сейчас читаете и готовы — мы ждём вас</p>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let current = 0;
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function show(index) {
+    if (index < 0 || index >= slides.length) return;
+
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === index) s.classList.add('active');
+      else if (i < index) s.classList.add('prev');
+    });
+
+    counter.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
+    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    current = index;
+  }
+
+  function next() { if (current < slides.length - 1) show(current + 1); }
+  function prev() { if (current > 0) show(current - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if (dx < -50) next();
+    if (dx > 50) prev();
+  });
+
+  document.addEventListener('click', (e) => {
+    const w = window.innerWidth;
+    if (e.clientX > w * 0.7) next();
+    else if (e.clientX < w * 0.3) prev();
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>

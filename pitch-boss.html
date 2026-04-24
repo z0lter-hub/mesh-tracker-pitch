@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Предложение о запуске проекта</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b1220;
+    --bg-2: #111a2e;
+    --panel: #17223b;
+    --ink: #e8edf5;
+    --ink-dim: #8c99b3;
+    --ink-muted: #5d6a86;
+    --accent: #ff9248;
+    --accent-2: #2dd4bf;
+    --alert: #ff6b6b;
+    --line: rgba(255, 255, 255, 0.08);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', 'Inter', 'Helvetica Neue', -apple-system, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6vh 10vw;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at top left, rgba(45, 212, 191, 0.06), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(255, 146, 72, 0.05), transparent 50%),
+      var(--bg);
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .slide.prev {
+    transform: translateX(-40px);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5.2vw, 72px);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 17ch;
+    margin-bottom: 24px;
+  }
+
+  h1 .accent {
+    color: var(--accent);
+  }
+
+  h2 {
+    font-size: clamp(28px, 3.6vw, 52px);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    max-width: 20ch;
+    margin-bottom: 28px;
+  }
+
+  h3 {
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.5;
+    color: var(--ink-dim);
+    max-width: 60ch;
+    margin-bottom: 24px;
+  }
+
+  .sub {
+    font-size: clamp(16px, 1.35vw, 20px);
+    color: var(--ink-dim);
+    margin-top: 16px;
+    max-width: 55ch;
+  }
+
+  .counter {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    letter-spacing: 1.5px;
+    z-index: 10;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--accent-2), var(--accent));
+    transition: width 0.4s ease;
+    z-index: 10;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 28px;
+    left: 36px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 1px;
+    z-index: 10;
+  }
+
+  .grid {
+    display: grid;
+    gap: 22px;
+    margin-top: 14px;
+  }
+
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+
+  .card.teal::before { background: var(--accent-2); }
+
+  .card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .card p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+  }
+
+  .bullets {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    margin-top: 10px;
+    max-width: 65ch;
+  }
+
+  .bullets li {
+    position: relative;
+    padding-left: 26px;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .bullets.teal li::before { background: var(--accent-2); }
+  .bullets.alert li::before { background: var(--alert); }
+
+  .aside {
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-top: 20px;
+    max-width: 55ch;
+    font-style: italic;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 8px 0;
+  }
+
+  .stat-big {
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-lbl {
+    font-size: 16px;
+    color: var(--ink-dim);
+  }
+
+  .kicker {
+    font-size: clamp(14px, 1vw, 16px);
+    color: var(--ink-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 26px;
+  }
+
+  .roles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .role {
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .role h5 {
+    font-size: 15px;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .role p {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+
+  .motto {
+    font-size: clamp(22px, 2.6vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 14px 0 24px;
+  }
+
+  .motto .seg {
+    display: inline-block;
+    padding: 0 10px;
+    color: var(--ink-muted);
+  }
+  .motto .seg.active {
+    color: var(--accent);
+  }
+  .motto .arrow {
+    color: var(--ink-muted);
+    margin: 0 4px;
+  }
+
+  .rule-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .rule-tile {
+    padding: 20px 22px;
+    background: var(--panel);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .rule-tile.alert { border-left-color: var(--alert); }
+  .rule-tile.teal { border-left-color: var(--accent-2); }
+
+  .rule-tile h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .rule-tile p {
+    font-size: 14px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+
+  .grants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+    max-width: 70ch;
+  }
+
+  .grant-pill {
+    padding: 8px 14px;
+    background: rgba(45, 212, 191, 0.12);
+    color: var(--accent-2);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(45, 212, 191, 0.25);
+  }
+
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 32px;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 14px;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent-2), var(--accent));
+    z-index: 0;
+  }
+
+  .rm-step {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 10px;
+  }
+
+  .rm-dot {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 14px;
+    background: var(--bg);
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+  }
+
+  .rm-step:first-child .rm-dot { border-color: var(--accent-2); }
+  .rm-step:last-child .rm-dot { border-color: var(--accent); background: var(--accent); }
+
+  .rm-time {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .rm-title {
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .rm-desc {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+
+  .econ-compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin: 18px 0;
+    max-width: 75ch;
+  }
+
+  .econ-col {
+    padding: 22px 26px;
+    background: var(--panel);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    text-align: center;
+  }
+
+  .econ-col.highlight {
+    border-color: rgba(255, 146, 72, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 146, 72, 0.12);
+  }
+
+  .econ-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .econ-price {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+
+  .econ-unit {
+    font-size: 15px;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  .econ-desc {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+
+  .econ-arrow {
+    font-size: 30px;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  .big-num {
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 6vh 6vw; }
+    .grid-2, .grid-3, .roles, .rule-tiles, .roadmap { grid-template-columns: 1fr; }
+    .roadmap::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter">01 / 12</div>
+<div class="nav-hint">← → или пробел</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 — Title -->
+  <section class="slide active">
+    <div class="eyebrow">Предложение</div>
+    <h1>Запуск <span class="accent">реального бизнес-проекта</span><br>в старшей группе кружка</h1>
+    <p class="lede">Отобранная команда. Строгая дисциплина. Продукт российской разработки. Заявки на гранты. Первые продажи.</p>
+    <p class="sub" style="margin-top: 32px; opacity: 0.7">Итог — не ещё один собранный робот, а бизнес-продукт и навык его создания.</p>
+  </section>
+
+  <!-- 2 — Problem -->
+  <section class="slide">
+    <div class="eyebrow">Наблюдение</div>
+    <h2>Старшие ученики перерастают стандартную программу за год-два</h2>
+    <p class="lede">Они умеют паять, писать код, собирать линейники. Следующий шаг — не ещё один учебный робот. Им нужен вызов уровня взрослого мира: ответственность, сроки, команда, результат, который виден кому-то кроме родителей.</p>
+    <p class="sub">Без такого вызова они уходят — в игры, на улицу, в телефон. Кружок теряет самых способных в тот момент, когда они готовы стать лицом программы.</p>
+  </section>
+
+  <!-- 3 — Solution -->
+  <section class="slide">
+    <div class="eyebrow">Предложение</div>
+    <h2>Проект, которым можно <span style="color:var(--accent)">гордиться</span></h2>
+    <p class="lede">Запустить в старшей группе долгосрочный R&amp;D-проект по разработке собственного электронного продукта. С отбором команды, распределением ролей, строгим расписанием, спринтами, публичными защитами, заявками на гранты и выходом на рынок.</p>
+    <ul class="bullets teal">
+      <li>Команда 4-6 человек — по отбору, не по желанию</li>
+      <li>2-3 обязательных занятия в неделю — железная дисциплина</li>
+      <li>Финал: готовый продукт, грантовая заявка, первые клиенты</li>
+    </ul>
+  </section>
+
+  <!-- 4 — Product -->
+  <section class="slide">
+    <div class="eyebrow">Продукт</div>
+    <h2>GPS-ошейник для&nbsp;собак, который <span style="color:var(--accent)">работает без сотовой связи</span></h2>
+    <p class="lede">Импортные трекеры (Tractive, Fi, Whistle) работают только в зоне соты. В поле, в пойме, в степи, во дворах с плотной застройкой — они молчат. Именно там собак чаще всего и теряют.</p>
+    <p class="lede">Наш ошейник связывается с телефоном хозяина напрямую, через открытый эфир, без оператора и без абонентской платы. Российская разработка под российский рынок.</p>
+    <div class="grid grid-3" style="margin-top: 26px">
+      <div class="card teal">
+        <h4>Городские собаководы</h4>
+        <p>Хаски, маламуты, дворняги — известны своей привычкой срываться с поводка и уходить вникуда. В крупных городах уже работает добровольная радиосеть энтузиастов — она усиливает связь с ошейником даже в плотной застройке.</p>
+      </div>
+      <div class="card teal">
+        <h4>Охотничьи и рабочие</h4>
+        <p>Гончие, борзые, легавые теряются в полях и лесополосах — там, где соты нет. Охотники — целевая группа с готовностью платить и сильным комьюнити.</p>
+      </div>
+      <div class="card teal">
+        <h4>Фермерские хозяйства<br>и заповедники</h4>
+        <p>КРС, пастушьи собаки, мониторинг краснокнижных животных. B2B и B2G направления — долгие циклы продаж, но крупные контракты и гранты.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — Расписание и дисциплина -->
+  <section class="slide">
+    <div class="eyebrow">Принцип работы</div>
+    <h2>Это <span style="color:var(--accent)">не&nbsp;кружок «хочу / не&nbsp;хочу»</span></h2>
+    <div class="motto">
+      <span class="seg active">Хочу</span><span class="arrow">→</span><span class="seg active">научусь</span><span class="arrow">→</span><span class="seg active">сделаю</span><span class="arrow">→</span><span class="seg active">добьюсь</span>
+    </div>
+    <div class="rule-tiles">
+      <div class="rule-tile teal">
+        <h4>2-3 занятия в неделю — обязательно</h4>
+        <p>Стабильный темп и синхронный прогресс всей команды. Проект не допускает «сегодня пришёл — завтра забил».</p>
+      </div>
+      <div class="rule-tile alert">
+        <h4>Пропуски — только по болезни</h4>
+        <p>С подтверждением. Любые другие пропуски — без возврата оплаты. Это обязательство, а не подписка на удобный сервис.</p>
+      </div>
+      <div class="rule-tile">
+        <h4>Команда зависит от каждого</h4>
+        <p>Пропуск одного участника — это срыв спринта для остальных четверых. Ответственность не абстрактная, а живая.</p>
+      </div>
+      <div class="rule-tile teal">
+        <h4>Родители знают и подписывают</h4>
+        <p>Правила озвучены до зачисления. Родитель, который не готов держать дисциплину, — не наш клиент на этом проекте.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — Team: отбор -->
+  <section class="slide">
+    <div class="eyebrow">Команда</div>
+    <h2>Отбор, а&nbsp;не «все желающие»</h2>
+    <p class="lede">В проект берём 4-6 старших учеников через отбор. Критерии — ответственность, способность довести задачу до конца, готовность к двухнедельным спринтам, подтверждённая дисциплина в текущих занятиях.</p>
+    <div class="grid grid-2" style="margin-top:26px">
+      <div class="card teal">
+        <h4>Что получает отобранный</h4>
+        <p>Реальный продукт в портфолио. Со-авторство в разработке. Контакты потенциальных клиентов. Опыт грантовой заявки. Навыки уровня взрослого инженера.</p>
+      </div>
+      <div class="card">
+        <h4>Что получают остальные</h4>
+        <p>Следующий круг отбора в следующем запуске. Возможность наблюдать процесс. Планка качества, к которой есть к чему тянуться.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — Roles -->
+  <section class="slide">
+    <div class="eyebrow">Структура команды</div>
+    <h2>Как в настоящем стартапе — роли, не «все делают всё»</h2>
+    <div class="roles">
+      <div class="role"><h5>Железо</h5><p>Дизайн плат, подбор компонентов, сборка прототипов</p></div>
+      <div class="role"><h5>Прошивка</h5><p>Программа устройства, логика работы, энергосбережение</p></div>
+      <div class="role"><h5>Приложение</h5><p>Мобильный клиент: карта, история, уведомления</p></div>
+      <div class="role"><h5>Корпус и механика</h5><p>3D-модели, печать, защита от воды и ударов</p></div>
+      <div class="role"><h5>Менеджмент и продажи</h5><p>Клиенты, контент, заявки на гранты, продвижение</p></div>
+      <div class="role"><h5>Качество и полевой тест</h5><p>Сценарии, логирование, протоколы испытаний</p></div>
+    </div>
+    <p class="aside">Все видят работу всех. Каждый — владелец своего участка.</p>
+  </section>
+
+  <!-- 8 — Главный итог: навык и продукт -->
+  <section class="slide">
+    <div class="eyebrow">Главный результат</div>
+    <h2>Навык создания <span style="color:var(--accent)">собственного бизнес-продукта</span></h2>
+    <p class="lede">И сам продукт — не макет, не учебный стенд, а реальное устройство, которое можно использовать, продавать и защищать. Опыт полного цикла: идея → разработка → производство → продажа.</p>
+    <h3 style="margin-top: 18px">Подача на гранты — отдельный учебный модуль</h3>
+    <div class="grants">
+      <span class="grant-pill">Фонд Бортника «УМНИК»</span>
+      <span class="grant-pill">Росмолодёжь.Гранты</span>
+      <span class="grant-pill">РНФ — молодёжные проекты</span>
+      <span class="grant-pill">Фонд президентских грантов</span>
+      <span class="grant-pill">Региональные МСП-программы</span>
+      <span class="grant-pill">ИТ-акселераторы</span>
+    </div>
+    <p class="sub" style="margin-top: 20px">Школьник с успешной грантовой заявкой — не абстракция. Это реальный кейс, сильнее олимпиадных баллов при поступлении.</p>
+  </section>
+
+  <!-- 9 — Репутация -->
+  <section class="slide">
+    <div class="eyebrow">Репутация</div>
+    <h2>Это поднимает планку кружка в&nbsp;глазах родителей и&nbsp;города</h2>
+    <div class="grid grid-3" style="margin-top:24px">
+      <div class="card teal">
+        <h4>Родители</h4>
+        <p>«Мой ребёнок в проекте, а не просто на кружке» — сильный аргумент для продления занятий и привлечения новых семей.</p>
+      </div>
+      <div class="card teal">
+        <h4>Город и&nbsp;СМИ</h4>
+        <p>Местные СМИ любят истории про школьников с реальными разработками. Это бесплатный PR учреждению и шанс на региональные премии.</p>
+      </div>
+      <div class="card teal">
+        <h4>Поступление в&nbsp;вузы</h4>
+        <p>Индивидуальные достижения при поступлении — наш кружок выдаёт их не «одному таланту», а всей команде, системно.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — Запрос -->
+  <section class="slide">
+    <div class="eyebrow">Что нужно от учреждения</div>
+    <h2>Ресурсы для&nbsp;старта</h2>
+    <ul class="bullets teal">
+      <li>Помещение: текущие занятия + 1 дополнительная встреча в неделю для команды проекта</li>
+      <li>Доступ к 3D-принтеру кружка для печати корпусов</li>
+      <li>Стартовый бюджет на комплектующие: <strong style="color:var(--accent)">около 20-30 тыс. ₽</strong> на первую партию прототипов</li>
+      <li>Разрешение на публичное ведение проекта: телеграм-канал, упоминание школы, фотографии команды</li>
+      <li>Поддержка при оформлении грантовых заявок: подпись, устав, реквизиты</li>
+    </ul>
+    <p class="aside">Бюджет на железо окупается первой-второй продажей. Дальше проект самоокупаемый.</p>
+  </section>
+
+  <!-- 11 — Экономика проекта -->
+  <section class="slide">
+    <div class="eyebrow">Экономика</div>
+    <h2>Совсем другая экономика, чем&nbsp;у&nbsp;обычного кружка</h2>
+    <div class="econ-compare">
+      <div class="econ-col">
+        <div class="econ-label">Текущий формат</div>
+        <div class="econ-price">1 500 ₽ <span class="econ-unit">/ мес</span></div>
+        <div class="econ-desc">1 занятие × 3 часа в неделю<br>Развлекательно-образовательный формат</div>
+      </div>
+      <div class="econ-arrow">→</div>
+      <div class="econ-col highlight">
+        <div class="econ-label">Проектный формат</div>
+        <div class="econ-price"><span style="color:var(--accent)">12 000 ₽</span> <span class="econ-unit">/ мес</span></div>
+        <div class="econ-desc">2-3 занятия в неделю × 6 месяцев<br>Командная работа, менторство, продукт</div>
+      </div>
+    </div>
+    <div class="grid grid-3" style="margin-top: 28px">
+      <div class="card teal">
+        <h4>Выручка за&nbsp;цикл</h4>
+        <p><span class="big-num">360 000 ₽</span>6-месячный цикл, команда 5 человек</p>
+      </div>
+      <div class="card teal">
+        <h4>Стартовый взнос</h4>
+        <p><span class="big-num">+40 000 ₽</span>на материалы и комплектующие, от участников</p>
+      </div>
+      <div class="card teal">
+        <h4>Грантовый потенциал</h4>
+        <p><span class="big-num">до 500 000 ₽</span>при успешной заявке через 3-4 месяца</p>
+      </div>
+    </div>
+    <p class="aside">Распределение выручки между учреждением и руководителем проекта — по принятому порядку. Детальный расчёт со сценариями — в отдельном документе.</p>
+  </section>
+
+  <!-- 12 — Roadmap: проект обязан быть успешным -->
+  <section class="slide">
+    <div class="eyebrow">Путь к&nbsp;успеху</div>
+    <h2>Проект <span style="color:var(--accent)">обязан быть успешным</span> — и&nbsp;вот как</h2>
+    <p class="lede">Никаких «посмотрим, получится ли». Каждый этап имеет конкретный результат, ответственного и срок. Руководитель гарантирует доведение до финиша.</p>
+    <div class="roadmap">
+      <div class="rm-step">
+        <div class="rm-dot"></div>
+        <div class="rm-time">1-2 мес</div>
+        <div class="rm-title">Команда и&nbsp;старт</div>
+        <div class="rm-desc">Отбор, распределение ролей, закупка железа, первый прототип на готовых платах</div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-dot"></div>
+        <div class="rm-time">3-4 мес</div>
+        <div class="rm-title">Своя разработка</div>
+        <div class="rm-desc">Собственная плата, собственный корпус, собственная прошивка и приложение</div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-dot"></div>
+        <div class="rm-time">5-6 мес</div>
+        <div class="rm-title">Продукт и&nbsp;грант</div>
+        <div class="rm-desc">Полевые испытания у реальных собаководов, публичная защита, заявка на грант</div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-dot"></div>
+        <div class="rm-time">7-12 мес</div>
+        <div class="rm-title">Первые продажи</div>
+        <div class="rm-desc">Продажи, расширение команды, следующая версия, выход на новые сегменты</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — Closing -->
+  <section class="slide">
+    <div class="eyebrow">Итог</div>
+    <h2>Из&nbsp;«ребят, которые собирают роботов» — в&nbsp;<span class="accent">команду, создающую и&nbsp;продающую продукт</span></h2>
+    <p class="lede" style="margin-top:14px">Это качественное изменение статуса старшей группы. Для учеников — реальный вызов и взрослый результат. Для кружка — новый уровень и поток сильных родителей. Для учреждения — кейс, который работает на репутацию годами.</p>
+    <p class="kicker">Готов ответить на любые вопросы и показать подготовленные планы и исследование</p>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let current = 0;
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function show(index) {
+    if (index < 0 || index >= slides.length) return;
+
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === index) s.classList.add('active');
+      else if (i < index) s.classList.add('prev');
+    });
+
+    counter.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
+    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    current = index;
+  }
+
+  function next() { if (current < slides.length - 1) show(current + 1); }
+  function prev() { if (current > 0) show(current - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if (dx < -50) next();
+    if (dx > 50) prev();
+  });
+
+  document.addEventListener('click', (e) => {
+    const w = window.innerWidth;
+    if (e.clientX > w * 0.7) next();
+    else if (e.clientX < w * 0.3) prev();
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
